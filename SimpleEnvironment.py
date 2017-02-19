@@ -30,6 +30,8 @@ class SimpleEnvironment(object):
         #
         # TODO: Generate and return a random configuration
         #
+        config[0] = numpy.random.uniform(low=lower_limits[0], high=upper_limits[0]);
+        config[1] = numpy.random.uniform(low=lower_limits[1], high=upper_limits[1]);
         
         return numpy.array(config)
 
@@ -38,7 +40,7 @@ class SimpleEnvironment(object):
         # TODO: Implement a function which computes the distance between
         # two configurations
         #
-        pass
+        return numpy.linalg.norm(numpy.array(start_config) - numpy.array(end_config));
 
     def Extend(self, start_config, end_config):
         
@@ -46,7 +48,29 @@ class SimpleEnvironment(object):
         # TODO: Implement a function which attempts to extend from 
         #   a start configuration to a goal configuration
         #
-        pass
+
+        origTransform = self.robot.GetTransform()
+
+        steps = 50;
+        xSteps = numpy.linspace(start_config[0], end_config[0], (steps + 1));
+        ySteps = numpy.linspace(start_config[1], end_config[1], (steps + 1));
+
+        for i in range(steps + 1):
+
+            transform = self.robot.GetTransform()
+            transform[0, 3] = xSteps[i]
+            transform[1, 3] = ySteps[i]
+            self.robot.SetTransform(transform);
+
+            for body in self.robot.GetEnv().GetBodies():
+                if (body.GetName() != self.robot.GetName() and
+                        self.robot.GetEnv().CheckCollision(body, self.robot)):
+                    self.robot.SetTransform(origTransform);
+                    return None;
+
+        self.robot.SetTransform(origTransform)
+
+        return end_config
 
     def ShortenPath(self, path, timeout=5.0):
         
