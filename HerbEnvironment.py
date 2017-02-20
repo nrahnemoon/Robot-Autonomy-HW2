@@ -1,4 +1,4 @@
-import numpy
+import numpy 
 
 class HerbEnvironment(object):
     
@@ -31,31 +31,55 @@ class HerbEnvironment(object):
         
 
     def GenerateRandomConfiguration(self):
-        config = [0] * len(self.robot.GetActiveDOFIndices())
+        num_dof = len(self.robot.GetActiveDOFIndices())
+        config = [0] * num_dof
 
-        #
         # TODO: Generate and return a random configuration
-        #
+        lower_limits, upper_limits = self.robot.GetActiveDOFLimits()
+
+        for dim in range (num_dof):
+            config[dim] = numpy.random.uniform(low=lower_limits[dim], high=upper_limits[dim]);
+
         return numpy.array(config)
 
 
     
     def ComputeDistance(self, start_config, end_config):
         
-        #
-        # TODO: Implement a function which computes the distance between
-        # two configurations
-        #
-        pass
+        # TODO: Implement a function which computes the distance between two configurations
+
+        return numpy.linalg.norm(numpy.array(start_config) - numpy.array(end_config));
 
 
     def Extend(self, start_config, end_config):
         
-        #
         # TODO: Implement a function which attempts to extend from 
-        #   a start configuration to a goal configuration
-        #
-        pass
+        # a start configuration to a goal configuration
+        num_dof = len(self.robot.GetActiveDOFIndices())
+        steps = 50
+        
+        # Generate interpolations (joint by joint?)
+        JointSteps = numpy.transpose(numpy.array([start_config] * steps));
+        for dim in range(num_dof):
+            JointSteps[dim] = numpy.linspace(start_config[dim], end_config[dim], steps);
+
+        for i in range(steps):
+            self.robot.SetActiveDOFValues(JointSteps[:,i]);
+            
+            # Check collision
+            for body in self.robot.GetEnv().GetBodies():
+                if ((body.GetName() != self.robot.GetName() and
+                    self.robot.GetEnv().CheckCollision(self.robot, body)) or
+                    self.robot.CheckSelfCollision()):
+                    # Check first step
+                    if (i == 0): 
+                        return None
+                    else:
+                        #JointSteps[dim] = [JointSteps[dim,i-1]] * steps
+                        end_config[dim] = JointSteps[dim,i-1]
+        
+        # No collision detected 
+        return numpy.array(end_config)
         
     def ShortenPath(self, path, timeout=5.0):
         

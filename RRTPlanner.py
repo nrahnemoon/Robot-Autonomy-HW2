@@ -7,8 +7,11 @@ class RRTPlanner(object):
         self.planning_env = planning_env
         self.visualize = visualize
         
+    # Original epsilon value = 0.001
+    # Changed epsilon to 0.5 for simple env (-Theo)
+    # Changed epsilon to  2 for Herb env (-Theo)
 
-    def Plan(self, start_config, goal_config, epsilon = 0.001):
+    def Plan(self, start_config, goal_config, epsilon = 0.5):
         
         tree = RRTTree(self.planning_env, start_config)
         plan = []
@@ -27,24 +30,29 @@ class RRTPlanner(object):
 
         print "startConfig = [%.2f, %.2f]" %(start_config[0], start_config[1])
         print "goalConfig = [%.2f, %.2f]" %(goal_config[0], goal_config[1])
-        while (self.planning_env.Extend(currConfig, goal_config) == None):
+        #while (self.planning_env.Extend(currConfig, goal_config) == None):
 
+        while (self.planning_env.ComputeDistance(currConfig,goal_config) > epsilon):
             newCurrConfig = self.planning_env.GenerateRandomConfiguration();
             [nearID, nearConfig] = tree.GetNearestVertex(newCurrConfig);
             print "newCurrConfig = [%.2f, %.2f]" %(newCurrConfig[0], newCurrConfig[1])
             print "nearID = %d, nearConfig = [%.2f, %.2f]" %(nearID, nearConfig[0], nearConfig[1])
             
-            if (self.planning_env.Extend(newCurrConfig, nearConfig) != None):
-                currConfig = newCurrConfig;
+            print self.planning_env.Extend(nearConfig, newCurrConfig)
+
+            if (self.planning_env.Extend(nearConfig, newCurrConfig) != None):
+                currConfig = self.planning_env.Extend(nearConfig, newCurrConfig)
                 currID = tree.AddVertex(currConfig);
                 tree.AddEdge(nearID, currID);
 
+                #plan.append(currConfig)
+
                 print "currID = %d, currConfig = [%.2f, %.2f]" %(currID, currConfig[0], currConfig[1])
-                self.planning_env.PlotEdge(nearConfig, currConfig);
+                #self.planning_env.PlotEdge(nearConfig, currConfig);
 
         goalID = tree.AddVertex(goal_config);
         tree.AddEdge(currID, goalID);
-        self.planning_env.PlotEdge(currConfig, goal_config)
+        #self.planning_env.PlotEdge(currConfig, goal_config)
 
         currConfig = goal_config
         currID = goalID;

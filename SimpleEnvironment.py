@@ -65,10 +65,13 @@ class SimpleEnvironment(object):
             for body in self.robot.GetEnv().GetBodies():
                 if (body.GetName() != self.robot.GetName() and
                         self.robot.GetEnv().CheckCollision(body, self.robot)):
-                    self.robot.SetTransform(origTransform);
-                    return None;
+                    #self.robot.SetTransform(origTransform);
+                    if (i == 0):
+                        return None;
+                    else:
+                        return [xSteps[i-1], ySteps[i-1]]
 
-        self.robot.SetTransform(origTransform)
+        #self.robot.SetTransform(origTransform)
 
         return end_config
 
