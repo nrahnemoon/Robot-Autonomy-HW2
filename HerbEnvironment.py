@@ -1,5 +1,5 @@
 import numpy 
-
+import time
 class HerbEnvironment(object):
     
     def __init__(self, herb):
@@ -88,4 +88,10 @@ class HerbEnvironment(object):
         #  on the given path.  Terminate the shortening after the 
         #  given timout (in seconds).
         #
+        initTime = time.time()
+        while(time.time()-initTime<timeout):
+            for i in range(1,len(path)-1):
+                start_config = path[i-1]
+                final_config = path[i+1]
+                config = self.Extend(start_config,final_config)
         return path
