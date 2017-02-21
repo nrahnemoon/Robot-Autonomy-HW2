@@ -58,8 +58,12 @@ class HerbEnvironment(object):
         num_dof = len(self.robot.GetActiveDOFIndices())
         steps = 25
 
+        if(start_config == None):
+            return None
         # Generate interpolations (joint by joint?)
         JointSteps = numpy.transpose(numpy.array([start_config] * steps));
+        #import IPython
+        #IPython.embed()
         for dim in range(num_dof):
             JointSteps[dim] = numpy.linspace(start_config[dim], end_config[dim], steps);
 

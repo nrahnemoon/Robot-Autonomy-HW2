@@ -40,7 +40,7 @@ class RRTConnectPlanner(object):
             if (extension != None):
                 extIDf = ftree.AddVertex(extension);
                 ftree.AddEdge(nearID, extIDf);
-                self.planning_env.PlotEdge(nearConfig, extension);
+                #self.planning_env.PlotEdge(nearConfig, extension);
             
             #if(numpy.array_equal(extension, goal_config)):
             #    disc = False
@@ -55,7 +55,7 @@ class RRTConnectPlanner(object):
             if (extension != None):
                 extIDr = rtree.AddVertex(extension);
                 rtree.AddEdge(nearID, extIDr);
-                self.planning_env.PlotEdge(nearConfig, extension);
+                #self.planning_env.PlotEdge(nearConfig, extension);
             
             #if(numpy.array_equal(extension, start_config)):
             #    disc = False
@@ -66,7 +66,7 @@ class RRTConnectPlanner(object):
                     if (numpy.array_equal(lastlink,ftree.vertices[i])):
                         lastIDr = rtree.AddVertex(lastlink);
                         rtree.AddEdge(extIDr, lastIDr);
-                        self.planning_env.PlotEdge(extension, lastlink);
+                        #self.planning_env.PlotEdge(extension, lastlink);
                         disc = False
                         extIDf = i
                         break
