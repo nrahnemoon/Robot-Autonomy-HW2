@@ -51,7 +51,7 @@ class SimpleEnvironment(object):
 
         origTransform = self.robot.GetTransform()
 
-        steps = 50;
+        steps = 10;
         xSteps = numpy.linspace(start_config[0], end_config[0], (steps + 1));
         ySteps = numpy.linspace(start_config[1], end_config[1], (steps + 1));
 

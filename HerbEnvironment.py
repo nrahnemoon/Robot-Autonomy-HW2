@@ -57,7 +57,7 @@ class HerbEnvironment(object):
         # a start configuration to a goal configuration
         num_dof = len(self.robot.GetActiveDOFIndices())
         steps = 50
-        
+
         # Generate interpolations (joint by joint?)
         JointSteps = numpy.transpose(numpy.array([start_config] * steps));
         for dim in range(num_dof):
@@ -76,7 +76,7 @@ class HerbEnvironment(object):
                         return None
                     else:
                         #JointSteps[dim] = [JointSteps[dim,i-1]] * steps
-                        end_config[dim] = JointSteps[dim,i-1]
+                        return None#end_config[:] = JointSteps[:,i-1]
         
         # No collision detected 
         return numpy.array(end_config)
