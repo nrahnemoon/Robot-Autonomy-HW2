@@ -17,6 +17,7 @@ class RRTConnectPlanner(object):
         plan = []
         rplan = []
         fplan = []
+        expansions = 0;
 
         if self.visualize and hasattr(self.planning_env, 'InitializePlot'):
             self.planning_env.InitializePlot(goal_config)
@@ -34,7 +35,7 @@ class RRTConnectPlanner(object):
                 desConfig = self.planning_env.GenerateRandomConfiguration();
             else:
                 desConfig = goal_config;
-
+            expansions+=1
             [nearID, nearConfig] = ftree.GetNearestVertex(desConfig);            
             extension = self.planning_env.Extend(nearConfig, desConfig)
             if (extension != None):
@@ -49,7 +50,7 @@ class RRTConnectPlanner(object):
                 desConfig = self.planning_env.GenerateRandomConfiguration();
             else:
                 desConfig = start_config;
-
+            expansions+=1
             [nearID, nearConfig] = rtree.GetNearestVertex(desConfig);            
             extension = self.planning_env.Extend(nearConfig, desConfig)
             if (extension != None):
@@ -61,7 +62,7 @@ class RRTConnectPlanner(object):
             #    disc = False
 
             for i in range(len(ftree.vertices)):
-                if (numpy.linalg.norm(numpy.array(desConfig) - numpy.array(ftree.vertices[i])) < 2):
+                if (numpy.linalg.norm(numpy.array(desConfig) - numpy.array(ftree.vertices[i])) < 5):
                     lastlink = self.planning_env.Extend(extension, ftree.vertices[i])
                     if (numpy.array_equal(lastlink,ftree.vertices[i])):
                         lastIDr = rtree.AddVertex(lastlink);
@@ -69,6 +70,7 @@ class RRTConnectPlanner(object):
                         #self.planning_env.PlotEdge(extension, lastlink);
                         disc = False
                         extIDf = i
+                        expansions+=1
                         break
         lastlink_cp = lastlink
         rplan.insert(0,goal_config)
@@ -96,5 +98,5 @@ class RRTConnectPlanner(object):
         for config in plan:
             print "fconfig = [%.2f, %.2f]" %(config[0], config[1])
         print("--- %s seconds ---" % (time.time() - start_time))
-
+        print "Total expansions = %d" %(expansions)
         return plan
