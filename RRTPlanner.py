@@ -1,4 +1,5 @@
 import numpy
+import random
 from RRTTree import RRTTree
 
 class RRTPlanner(object):
@@ -11,7 +12,7 @@ class RRTPlanner(object):
     # Changed epsilon to 0.5 for simple env (-Theo)
     # Changed epsilon to  2 for Herb env (-Theo)
 
-    def Plan(self, start_config, goal_config, epsilon = 0.5):
+    def Plan(self, start_config, goal_config, epsilon = .001):
         
         tree = RRTTree(self.planning_env, start_config)
         plan = []
@@ -33,7 +34,12 @@ class RRTPlanner(object):
         #while (self.planning_env.Extend(currConfig, goal_config) == None):
 
         while (self.planning_env.ComputeDistance(currConfig,goal_config) > epsilon):
-            newCurrConfig = self.planning_env.GenerateRandomConfiguration();
+            if(random.random() < .9):
+                newCurrConfig = self.planning_env.GenerateRandomConfiguration();
+            else:
+                newCurrConfig = goal_config;
+            #newCurrConfig = self.planning_env.GenerateRandomConfiguration();
+
             [nearID, nearConfig] = tree.GetNearestVertex(newCurrConfig);
             print "newCurrConfig = [%.2f, %.2f]" %(newCurrConfig[0], newCurrConfig[1])
             print "nearID = %d, nearConfig = [%.2f, %.2f]" %(nearID, nearConfig[0], nearConfig[1])
