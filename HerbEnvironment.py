@@ -56,7 +56,7 @@ class HerbEnvironment(object):
         # TODO: Implement a function which attempts to extend from 
         # a start configuration to a goal configuration
         num_dof = len(self.robot.GetActiveDOFIndices())
-        steps = 50
+        steps = 25
 
         # Generate interpolations (joint by joint?)
         JointSteps = numpy.transpose(numpy.array([start_config] * steps));

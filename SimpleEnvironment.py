@@ -61,6 +61,7 @@ class SimpleEnvironment(object):
             transform[0, 3] = xSteps[i]
             transform[1, 3] = ySteps[i]
             self.robot.SetTransform(transform);
+            
 
             for body in self.robot.GetEnv().GetBodies():
                 if (body.GetName() != self.robot.GetName() and

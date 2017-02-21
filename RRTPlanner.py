@@ -1,6 +1,7 @@
 import numpy
 import random
 from RRTTree import RRTTree
+import time
 
 class RRTPlanner(object):
 
@@ -13,9 +14,10 @@ class RRTPlanner(object):
     # Changed epsilon to  2 for Herb env (-Theo)
 
     def Plan(self, start_config, goal_config, epsilon = .001):
-        
+        start_time = time.time()
         tree = RRTTree(self.planning_env, start_config)
         plan = []
+
         if self.visualize and hasattr(self.planning_env, 'InitializePlot'):
             self.planning_env.InitializePlot(goal_config)
         # TODO: Here you will implement the rrt planner
@@ -44,10 +46,11 @@ class RRTPlanner(object):
             print "newCurrConfig = [%.2f, %.2f]" %(newCurrConfig[0], newCurrConfig[1])
             print "nearID = %d, nearConfig = [%.2f, %.2f]" %(nearID, nearConfig[0], nearConfig[1])
             
-            print self.planning_env.Extend(nearConfig, newCurrConfig)
+            extension = self.planning_env.Extend(nearConfig, newCurrConfig)
+            print extension
 
-            if (self.planning_env.Extend(nearConfig, newCurrConfig) != None):
-                currConfig = self.planning_env.Extend(nearConfig, newCurrConfig)
+            if (extension != None):
+                currConfig = extension
                 currID = tree.AddVertex(currConfig);
                 tree.AddEdge(nearID, currID);
 
@@ -72,5 +75,6 @@ class RRTPlanner(object):
 
         for config in plan:
             print "config = [%.2f, %.2f]" %(config[0], config[1])
+        print("--- %s seconds ---" % (time.time() - start_time))
 
         return plan;
