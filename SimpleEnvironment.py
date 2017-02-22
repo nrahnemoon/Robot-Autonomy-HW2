@@ -83,6 +83,19 @@ class SimpleEnvironment(object):
         #  on the given path.  Terminate the shortening after the 
         #  given timout (in seconds).
         #
+        initTime = time.time()
+        while(time.time()-initTime<timeout):
+            for ind in range(1,len(path)-1):
+                start_config = path[ind-1]
+                final_config = path[ind+1]
+                config = self.Extend(start_config,final_config)
+                
+                same_bool = 1
+                for i in range(len(config)):
+                    if config[i]!=final_config[i]:
+                        same_bool = 0
+                if same_bool ==1:
+                    del path[ind]
         return path
 
 
