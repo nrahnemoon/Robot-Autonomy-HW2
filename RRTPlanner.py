@@ -76,5 +76,8 @@ class RRTPlanner(object):
         for config in plan:
             print "config = [%.2f, %.2f]" %(config[0], config[1])
         print("--- %s seconds ---" % (time.time() - start_time))
+        print("--- %s path length ---" % len(plan))
+        print("--- %s vertices ---" % len(tree.vertices))
+
 
         return plan;

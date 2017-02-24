@@ -99,4 +99,8 @@ class RRTConnectPlanner(object):
             print "fconfig = [%.2f, %.2f]" %(config[0], config[1])
         print("--- %s seconds ---" % (time.time() - start_time))
         print "Total expansions = %d" %(expansions)
+        print("--- %s seconds ---" % (time.time() - start_time))
+        print("--- %s path length ---" % len(plan))
+        print("--- %s vertices ---" % (len(ftree.vertices) + len(rtree.vertices) - 1))
+
         return plan

@@ -13,7 +13,9 @@ from RRTConnectPlanner import RRTConnectPlanner
 def main(robot, planning_env, planner):
 
     raw_input('Press any key to begin planning')
-
+    #import IPython
+    #IPython.embed()
+    
     start_config = numpy.array(robot.GetCurrentConfiguration())
     if robot.name == 'herb':
         goal_config = numpy.array([ 3.68, -1.90,  0.00,  2.20,  0.00,  0.00,  0.00 ])
@@ -21,9 +23,21 @@ def main(robot, planning_env, planner):
         goal_config = numpy.array([2.0, -0.8])
 
     plan = planner.Plan(start_config, goal_config)
-    plan_short = planning_env.ShortenPath(plan)
-    traj = robot.ConvertPlanToTrajectory(plan_short)
-    robot.ExecuteTrajectory(traj)
+    #cost = 0;
+    #for i in range(0, (len(plan)-1)):
+    #    cost+= planning_env.ComputeDistance(plan[i], plan[i+1]);
+    #print("Unshortned path cost = %s", cost);
+    #plan_short = planning_env.ShortenPath(plan)
+    
+    #cost = 0;
+    #for i in range(0, (len(plan_short)-1)):
+    #    cost+= planning_env.ComputeDistance(plan_short[i], plan_short[i+1]);
+    #print("Shortned path cost = %s", cost);
+
+    traj1 = robot.ConvertPlanToTrajectory(plan)
+    #traj2 = robot.ConvertPlanToTrajectory(plan_short)
+    robot.ExecuteTrajectory(traj1)
+    #robot.ExecuteTrajectory(traj2)
 
 if __name__ == "__main__":
     

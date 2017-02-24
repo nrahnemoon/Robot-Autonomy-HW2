@@ -22,6 +22,7 @@ class SimpleEnvironment(object):
         self.p = 0.0
 
     def SetGoalParameters(self, goal_config, p = 0.2):
+ 
         self.goal_config = goal_config
         self.p = p
         
